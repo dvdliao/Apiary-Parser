@@ -18,6 +18,9 @@ unformatted_api_calls = re.findall(api_calls_pattern_unformatted, file_text)
 calls = map(lambda x: x[1], api_calls)
 unformatted_calls = map(lambda x: ''.join(x), unformatted_api_calls)
 
+# for call in calls:
+# 	print call
+
 # get the information between the calls
 def string_between(s, first, last):
 	start = s.index(first) + len(first)
@@ -31,9 +34,12 @@ for index in range(0, len(unformatted_calls)-1):
 
 # still need to get the call information for the last call. Everything below the last call header
 
-# members format
-calls_members_pattern = re.compile(r"(\| )(?P<name>[\w]+)(.*)")
-calls_members = re.findall(calls_members_pattern, file_text)
+calls_members = re.findall(r"(\| [\w\s|]+)+", file_text)
 
-for call_member in calls_members:
-	print call_member[1] + call_member[2]
+calls_members = map(lambda x: re.sub(r"( +)",r" ", x), calls_members) # reduce multiple spaces down to one
+calls_members = map(lambda x: re.sub(r"\n",r"", x), calls_members) # remove all \n characters
+calls_members = map(lambda x: x.split("|"), calls_members)
+calls_members = map(lambda x: filter(None, x), calls_members) #remove all empty strings
+
+# for cm in calls_members:
+# 	print cm
